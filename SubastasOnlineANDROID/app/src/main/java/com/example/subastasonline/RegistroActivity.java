@@ -21,19 +21,29 @@ public class RegistroActivity extends AppCompatActivity {
     //Variable de autenticacion de firebase
     private FirebaseAuth mAuth = null;
     private ProgressDialog progressDialog;
+    private EditText correo;
+    private EditText contra1;
+    private EditText contra2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+
         //Generando instancia con firebase
-         mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-         Button btnRegistrar = (Button) findViewById(R.id.btn_registrar);
-         Button btnVolver = (Button) findViewById(R.id.btn_cancelar_registro);
+        //Botenes y mandando a llamar los campos Edit Text que se van a utilziar
+        Button btnRegistrar = (Button) findViewById(R.id.btn_registrar);
+        Button btnVolver = (Button) findViewById(R.id.btn_cancelar_registro);
+        correo = (EditText) findViewById(R.id.ed_correo_reg);
+        contra1 = (EditText) findViewById(R.id.ed_password_reg);
+        contra2 = (EditText) findViewById(R.id.ed_password2_reg);
 
-         progressDialog = new ProgressDialog(this);
+        //Un process dialog para mostrar una pantalla de carga al hacer la peticion
+        progressDialog = new ProgressDialog(this);
 
+        //Metodo listener de los botones
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,7 +51,7 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
 
-
+        //Metodo listener de los botones
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,45 +60,58 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
-    private void registrar(){
-        EditText correo = (EditText) findViewById(R.id.ed_correo_reg);
-        EditText contra1 = (EditText) findViewById(R.id.ed_password_reg);
-        EditText contra2 = (EditText) findViewById(R.id.ed_password2_reg);
+    /**
+     * Metodo registrar, que valida los campos del correo y las dos contraseñas
+     * Se incluye el metodo registrarFirebase, que obtiene dos parametros el cual son correo y contraseña
+     */
+    private void registrar() {
+
+        //Convirtiendo los EditText a String para poder compararlos y utilizarlos para las validaciones
         String correoS = correo.getText().toString().trim();
         String contraS = contra1.getText().toString().trim();
         String contra2S = contra2.getText().toString().trim();
 
-        //Validaciones
-        if (!correoS.isEmpty() && !contraS.isEmpty() && !contra2S.isEmpty()){
-            if (contraS.equalsIgnoreCase(contra2S)){
-                    progressDialog.setMessage("Procesando solicitud...");
-                    progressDialog.show();
-                    mAuth.signInWithEmailAndPassword(correoS, contraS)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(RegistroActivity.this, user.getEmail() + "ha sido registrado con exito", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(RegistroActivity.this, "Ha ocurrido un error", Toast.LENGTH_LONG).show();
-                                    }
-                                    progressDialog.dismiss();
-                                }
-                            });
-            }else{
+        //Validaciones de los campos
+        if (!correoS.isEmpty() && !contraS.isEmpty() && !contra2S.isEmpty()) {
+            if (contraS.equalsIgnoreCase(contra2S)) {
+                registrarFirebase(correoS, contraS);
+            } else {
                 Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             Toast.makeText(this, "Por favor ingrese sus datos", Toast.LENGTH_SHORT).show();
         }
     }
 
-//    private void registrarFirebase(String correo, String contra){
-//
-//    }
+    /**
+     * El metodo registrarFirebase que recibe dos parametros correo y contraseña para validar el registro del nuevo usuario.
+     * Se utiliza la instancia de firebase para llamar al metodo createUserWithEmailAndPassword que recibe los parametros del metodo
+     * y se le agrega un metodo para escuchar si se complemento el proceso, en resumen en el metodo onComplete si la task se
+     * completa correctamente se genera un nuevo objeto usuario de tipo FirebaseUser desde el usuario actual introducido y
+     * se completa la accion, en caso contrario se lazaran los Toast.makeText por posibles errores.
+     * @param correo
+     * @param contra
+     */
+    private void registrarFirebase(String correo, String contra) {
+        progressDialog.setMessage("Procesando solicitud...");
+        progressDialog.show();
+        mAuth.createUserWithEmailAndPassword(correo, contra)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(RegistroActivity.this, user.getEmail() + " ha sido registrado con exito", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(RegistroActivity.this, LoginActivity.class);
+                            startActivity(i);
 
-
+                        } else {
+                            Toast.makeText(RegistroActivity.this, "Ha ocurrido un error, posiblemente la cuenta ya existe", Toast.LENGTH_LONG).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                });
+    }
 
 
 }

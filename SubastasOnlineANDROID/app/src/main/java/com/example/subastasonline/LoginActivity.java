@@ -1,29 +1,53 @@
 package com.example.subastasonline;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth = null;
+    private ProgressDialog progressDialog;
+    private EditText correo;
+    private EditText contra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button btnEntrar = (Button) findViewById(R.id.btn_entrar);
-        btnEntrar.setOnClickListener(new View.OnClickListener() {
+        //Creando instancia con firebase
+        mAuth = FirebaseAuth.getInstance();
+
+        //Obteniendo los valores de los EditTex y los botones
+        Button btnEntrarLog = (Button) findViewById(R.id.btn_entrar);
+        Button btnRegistro = (Button) findViewById(R.id.btn_registro);
+        correo = (EditText) findViewById(R.id.ed_correo);
+        contra = (EditText) findViewById(R.id.ed_password);
+
+        //Metodo listener para los botones
+
+        btnEntrarLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                ingresar();
             }
         });
 
-        Button btnRegistro = (Button) findViewById(R.id.btn_registro);
+        //Metodo listener para los botones
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -31,7 +55,41 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
+    /**
+     * Metodo para iniciar sesion con tus cuentas ya registradas, valida el usuario y el correo para asi
+     * entrar en el metodo signInWithEmailAndPassword que recibe dos parametros, correo y contra.
+     * Y que son escuchados por el metodo OnComplete, como en registro si se cumple la tarea se haria la accion
+     */
 
+    private void ingresar(){
+
+            String correoLog = correo.getText().toString().trim(); //Variable de tipo final, para que funcione con el putExtra();
+            String contraLog = contra.getText().toString().trim();
+
+            if (!correoLog.isEmpty() && !contraLog.isEmpty()){
+                progressDialog.setMessage("Ingresando...");
+                progressDialog.show();
+                mAuth.signInWithEmailAndPassword(correoLog, contraLog)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(getApplicationContext(), "Has iniciado sesion correctamente", Toast.LENGTH_LONG).show();
+
+                            //Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                            //i.putExtra("usuario", correoLog);
+                            //startActivity(i);
+                        }else{
+                            Toast.makeText(getApplicationContext(), "No se ha podido iniciar sesion", Toast.LENGTH_LONG).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                });
+            }else{
+                Toast.makeText(this, "Por favor, ingrese bien sus datos!", Toast.LENGTH_LONG).show();
+            }
     }
 }
