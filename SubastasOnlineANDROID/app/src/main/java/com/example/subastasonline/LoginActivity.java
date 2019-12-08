@@ -35,8 +35,10 @@ public class LoginActivity extends AppCompatActivity {
         //Obteniendo los valores de los EditTex y los botones
         Button btnEntrarLog = (Button) findViewById(R.id.btn_entrar);
         Button btnRegistro = (Button) findViewById(R.id.btn_registro);
-        correo = (EditText) findViewById(R.id.ed_correo);
-        contra = (EditText) findViewById(R.id.ed_password);
+        correo = findViewById(R.id.ed_correo);
+        contra = findViewById(R.id.ed_password);
+
+        progressDialog = new ProgressDialog(this);
 
         //Metodo listener para los botones
 
@@ -63,33 +65,51 @@ public class LoginActivity extends AppCompatActivity {
      * Y que son escuchados por el metodo OnComplete, como en registro si se cumple la tarea se haria la accion
      */
 
-    private void ingresar(){
+    private void ingresar() {
+        final String correo_s = correo.getText().toString();
+        String contra_s = contra.getText().toString();
 
-            String correoLog = correo.getText().toString().trim(); //Variable de tipo final, para que funcione con el putExtra();
-            String contraLog = contra.getText().toString().trim();
+        if (!correo_s.isEmpty() && !contra_s.isEmpty()) {
+            progressDialog.setMessage("Ingresando...");
+            progressDialog.show();
+            mAuth.signInWithEmailAndPassword(correo_s, contra_s)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
 
-            if (!correoLog.isEmpty() && !contraLog.isEmpty()){
-                progressDialog.setMessage("Ingresando...");
-                progressDialog.show();
-                mAuth.signInWithEmailAndPassword(correoLog, contraLog)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(getApplicationContext(), "Has iniciado sesion correctamente", Toast.LENGTH_LONG).show();
-
-                            //Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                            //i.putExtra("usuario", correoLog);
-                            //startActivity(i);
-                        }else{
-                            Toast.makeText(getApplicationContext(), "No se ha podido iniciar sesion", Toast.LENGTH_LONG).show();
-                        }
-                        progressDialog.dismiss();
+                    if (task.isSuccessful()){
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                        i.putExtra("usuario", correo_s);
+                        startActivity(i);
+                        Toast.makeText(LoginActivity.this, "Bienvenido de nuevo " + user.getEmail(), Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(LoginActivity.this, "Error al iniciar sesion", Toast.LENGTH_LONG).show();
                     }
-                });
-            }else{
-                Toast.makeText(this, "Por favor, ingrese bien sus datos!", Toast.LENGTH_LONG).show();
-            }
+                    progressDialog.dismiss();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Por favor ingrese bien los datos!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null){
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            String correo = user.getEmail();
+            i.putExtra("usuario", correo);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mAuth.signOut();
     }
 }
