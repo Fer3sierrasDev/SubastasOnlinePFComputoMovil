@@ -6,6 +6,8 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -14,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -21,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,15 +55,47 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        //Tomando el usuario que se registro para reflejarlo en el perfil, en este caso reflejado en la nav bar
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            String usuario = bundle.getString("usuario");
+            View headerView = navigationView.getHeaderView(0);
+            TextView tv_usr = (TextView) headerView.findViewById(R.id.tv_usuario);
+            tv_usr.setText(usuario);
+        }
     }
 
+    /**
+     * Metodo que despliega el menu de opciones en pantalla. Sin el, el menu de opciones no aparece
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-//        Intent i = new Intent(MainActivity.this, Info.class);
-//        startActivity(i);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
         return true;
+    }
+
+    /**
+     * Metodo que genera items en el menu de opciones, mediante un switch se identifica el menu_item
+     * en este caso el cerrar sesion hara un finish que cerrara ventana y se lanzara el metodo OnRestart del
+     * LoginActivity y se vera reflejado el logout
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.main, menu);
+        switch (item.getItemId()) {
+            case R.id.cerrar_sesion:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

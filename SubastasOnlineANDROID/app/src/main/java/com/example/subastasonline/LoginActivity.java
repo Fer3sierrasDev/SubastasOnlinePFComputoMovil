@@ -94,6 +94,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Metodo OnStart que permite mantener la sesion del usuario si este no ha cerrado sesion.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -107,6 +110,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Metodo OnRestart que se activa automaticamente cuando el usuario presiona el boton cerrar sesion.
+     */
     @Override
     protected void onRestart() {
         super.onRestart();
