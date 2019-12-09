@@ -27,7 +27,7 @@ public class CrearSubasta extends AppCompatActivity {
     private EditText descripcionSubasta;
     private Button btn_crearSubasta;
     private Button btn_cancelarSubasta;
-    private RecyclerView rv_lista_subastas;
+    //private RecyclerView rv_lista_subastas;
     private ProgressDialog progressDialog;
     private AdapterSubasta adapter;
 
@@ -45,7 +45,7 @@ public class CrearSubasta extends AppCompatActivity {
         nombreProducto = (EditText) findViewById(R.id.ed_producto_subasta);
         precioSubasta = (EditText) findViewById(R.id.ed_precio_inicial_subasta);
         descripcionSubasta = (EditText) findViewById(R.id.ed_descripcion_subasta);
-        rv_lista_subastas = (RecyclerView) findViewById(R.id.rv_subastas);
+        //rv_lista_subastas = (RecyclerView) findViewById(R.id.rv_subastas);
         btn_crearSubasta = (Button) findViewById(R.id.btn_crear_subasta);
         btn_cancelarSubasta = (Button) findViewById(R.id.btn_cancelar_subasta);
 
@@ -62,6 +62,7 @@ public class CrearSubasta extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(CrearSubasta.this, MainActivity.class));
+                finish();
             }
         });
 

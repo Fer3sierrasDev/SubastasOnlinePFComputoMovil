@@ -7,8 +7,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="menu_home">Lista de subastas</string>
+    <string name="menu_gallery">Mi pefil</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_cerrar_sesion">Cerrar sesión</string>
     <string name="menu_share">Share</string>

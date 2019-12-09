@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, CrearSubasta.class);
                 startActivity(i);
+                finish();
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
