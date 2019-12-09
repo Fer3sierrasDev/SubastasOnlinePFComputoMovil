@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primaryLightColor"
+    tools:context=".CrearSubasta">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear una subasta"
+        android:textSize="40dp"
+        android:textColor="@color/primaryTextColor"
+        android:fontFamily="georgia"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="5dp">
+
+    <EditText
+        android:id="@+id/ed_nombre_subasta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre de la subasta"
+        android:inputType="textPersonName"/>
+
+        <EditText
+            android:id="@+id/ed_producto_subasta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:hint="Nombre del producto a subastar"
+            android:inputType="textPersonName"/>
+
+        <EditText
+            android:id="@+id/ed_precio_inicial_subasta"
+            android:layout_width="152dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:hint="Precio inicial ($)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/ed_descripcion_subasta"
+            android:layout_width="match_parent"
+            android:layout_height="163dp"
+            android:layout_marginTop="25dp"
+            android:height="20dp"
+            android:hint="Descripción de la subasta...."
+            android:inputType="textLongMessage" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_crear_subasta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/secondaryDarkColor"
+            android:textColor="@color/primaryTextColor"
+            android:layout_marginRight="15dp"
+            android:text="Crear subasta"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_cancelar_subasta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/secondaryDarkColor"
+            android:textColor="@color/primaryTextColor"
+            android:layout_marginLeft="15dp"
+            android:text="Cancelar"
+            android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

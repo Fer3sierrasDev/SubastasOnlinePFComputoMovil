@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(MainActivity.this, CrearSubasta.class);
+                startActivity(i);
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Tomando el usuario que se registro para reflejarlo en el perfil, en este caso reflejado en la nav bar
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             String usuario = bundle.getString("usuario");
             View headerView = navigationView.getHeaderView(0);
             TextView tv_usr = (TextView) headerView.findViewById(R.id.tv_usuario);
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Metodo que despliega el menu de opciones en pantalla. Sin el, el menu de opciones no aparece
+     *
      * @param menu
      * @return
      */
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
      * Metodo que genera items en el menu de opciones, mediante un switch se identifica el menu_item
      * en este caso el cerrar sesion hara un finish que cerrara ventana y se lanzara el metodo OnRestart del
      * LoginActivity y se vera reflejado el logout
+     *
      * @param item
      * @return
      */
